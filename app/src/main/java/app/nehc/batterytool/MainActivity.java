@@ -11,12 +11,9 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
-import android.os.Looper;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.ArrayList;
 
@@ -173,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 refreshStatusTimer.cancel();
                 finish();
-                Toast.makeText(getApplicationContext(), "超时，退出程序", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "超时，退出程序", Toast.LENGTH_SHORT).show();
             }
         }, 1000 * 60 * 3);
     }

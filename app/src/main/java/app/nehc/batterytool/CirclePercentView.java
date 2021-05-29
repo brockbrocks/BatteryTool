@@ -39,7 +39,8 @@ public class CirclePercentView extends View {
         canvas.drawCircle(w / 2, h / 2, r, paint);
         //
         RectF rectF = new RectF(circleWeight / 2, circleWeight / 2, w - circleWeight / 2, w - circleWeight / 2);
-        paint.setARGB(255, 0,87,208);
+//        paint.setARGB(255, 0,87,208);
+        paint.setARGB(255, 28,115,212);
         canvas.drawArc(rectF, -90, -toAngle, false, paint);
         //0处圆圈
         paint.setStyle(Paint.Style.FILL);

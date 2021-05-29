@@ -6,9 +6,9 @@
     android:background="@drawable/funclist_item_selectable_decoration"
     android:orientation="horizontal"
     android:paddingLeft="40dp"
-    android:paddingTop="20dp"
+    android:paddingTop="22dp"
     android:paddingRight="40dp"
-    android:paddingBottom="20dp">
+    android:paddingBottom="22dp">
 
     <TextView
         android:textSize="13sp"
@@ -16,10 +16,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@drawable/funclist_item_decoration"
         android:gravity="left|center_vertical"
-        android:paddingLeft="20dp"
+        android:paddingLeft="8dp"
         android:text="@string/functionListName" />
+<!--    android:background="@drawable/funclist_item_decoration"-->
 
     <Switch
         android:id="@+id/funcSwitch"

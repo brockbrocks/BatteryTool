@@ -5,4 +5,7 @@
         <attr name="circlePercent" format="float"/>
         <attr name="percentTextSize" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="StatisticsView">
+        <attr name="fontSize" format="dimension"/>
+    </declare-styleable>
 </resources>

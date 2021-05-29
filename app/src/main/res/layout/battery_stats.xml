@@ -1,12 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingLeft="30dp"
+    android:paddingTop="30dp"
+    android:paddingRight="30dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:textColor="@color/black"
+        android:id="@+id/batteryStats_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="test" />
+        android:layout_marginBottom="40dp"
+        android:text="耗电详情"
+        android:textSize="24sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/screenOn_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/batteryStats_title"
+        android:text="亮屏时间" />
+
+    <TextView
+        android:id="@+id/screenOn_timeDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/screenOn_time"
+        android:layout_marginBottom="20dp"
+        android:text="0h 0m 0s"
+        android:textSize="24sp" />
+
+
+    <LinearLayout
+        android:id="@+id/switch_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/screenOn_timeDetail"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/batterystats_tv_bg"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:text="视图1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/batterystats_tv_bg"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:text="视图2" />
+    </LinearLayout>
+
+    <app.nehc.batterytool.StatisticsView
+        app:fontSize="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/switch_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="175dp"/>
+
+</RelativeLayout>

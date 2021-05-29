@@ -92,7 +92,6 @@ public class FunctionListAdapter extends RecyclerView.Adapter<FunctionListAdapte
                 }
                 break;
             case 10001:
-//                Toast.makeText(context, "此功能开发中", Toast.LENGTH_SHORT).show();
                 context.startActivity(new Intent(context, BatteryStats.class));
                 break;
             case 10002:
