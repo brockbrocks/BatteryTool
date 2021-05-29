@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<default-settings>
+    <setting-item id="10000">
+        <name>充电提醒（80%）</name>
+        <isSwitch>1</isSwitch>
+        <isEnable>0</isEnable>
+    </setting-item>
+    <setting-item id="10001">
+        <name>耗电详情</name>
+        <isSwitch>0</isSwitch>
+        <isEnable>0</isEnable>
+    </setting-item>
+    <setting-item id="10002">
+        <name>原生电池管理</name>
+        <isSwitch>0</isSwitch>
+        <isEnable>0</isEnable>
+    </setting-item>
+</default-settings>

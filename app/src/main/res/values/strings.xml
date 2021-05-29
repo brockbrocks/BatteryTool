@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BatteryTool</string>
+    <string name="functionListName">功能名称</string>
+</resources>
