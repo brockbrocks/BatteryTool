@@ -72,18 +72,8 @@ public class MainActivity extends AppCompatActivity {
         initRefreshCirclePercentReceiver();
         //
         initRefreshStatusPanel();
-        //test
-        test();
     }
 
-    private void test() {
-        AppBarLayout appBarLayout = findViewById(R.id.appBarLayout);
-        appBarLayout.addOnOffsetChangedListener((appBarLayout1, verticalOffset) -> {
-            Log.d("tttt", "onOffsetChanged: " + verticalOffset);
-            Log.d("tttt", "test: "+ appBarLayout1.getHeight());
-        });
-        Looper looper;
-    }
 
     private void initRefreshStatusPanel() {
         //刷新状态面板广播接收器
