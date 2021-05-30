@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -124,7 +125,17 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getFuncId()) {
                     case 10000:
                         //充电80%提醒功能
-                        startService(new Intent(this, MonitoringService.class));
+                        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+                        boolean isRunning = false;
+                        for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
+                            if (runningService.service.getClassName().equals(getPackageName() + ".service.MonitoringService")) {
+                                isRunning = true;
+                                break;
+                            }
+                        }
+                        if (!isRunning) {
+                            startService(new Intent(this, MonitoringService.class));
+                        }
                         break;
                 }
             }

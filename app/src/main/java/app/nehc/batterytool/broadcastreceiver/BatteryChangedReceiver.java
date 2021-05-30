@@ -12,6 +12,12 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.SimpleFormatter;
+
 import app.nehc.batterytool.R;
 
 public class BatteryChangedReceiver extends BroadcastReceiver {
@@ -43,6 +49,15 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
                     editor.putBoolean("has_notified", true);
                     editor.apply();
                 }
+                //record
+                boolean isCharging = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) != 0;
+                try {
+                    String time = new SimpleDateFormat("MM-dd HH:mm:ss").format(new Date().getTime());
+                    String writeContent = cBattery + " " + time + " " + new Date().getTime() + " " + isCharging + "\n";
+                    context.openFileOutput("stats_record", Context.MODE_APPEND).write(writeContent.getBytes());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case Intent.ACTION_POWER_DISCONNECTED:
                 editor = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).edit();
@@ -52,7 +67,7 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
             case Intent.ACTION_POWER_CONNECTED:
                 editor = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).edit();
                 editor.putBoolean("charge_notice", true);
-                editor.putBoolean("has_notified",false);
+                editor.putBoolean("has_notified", false);
                 editor.apply();
                 break;
         }

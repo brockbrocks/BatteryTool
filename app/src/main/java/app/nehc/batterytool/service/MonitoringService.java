@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 
 import app.nehc.batterytool.broadcastreceiver.BatteryChangedReceiver;
 
@@ -28,9 +29,9 @@ public class MonitoringService extends Service {
         return null;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(batteryChangedReceiver);
-    }
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+//        unregisterReceiver(batteryChangedReceiver);
+//    }
 }
