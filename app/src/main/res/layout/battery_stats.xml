@@ -68,10 +68,10 @@
     <app.nehc.batterytool.StatisticsView
         android:id="@+id/statisticView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/switch_group"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="200dp"
         app:fontSize="10dp" />
+<!--    android:layout_marginBottom="200dp"-->
 
 </RelativeLayout>

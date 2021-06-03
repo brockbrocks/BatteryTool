@@ -2,14 +2,12 @@ package app.nehc.batterytool;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class BatteryStats extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,6 +25,8 @@ public class BatteryStats extends AppCompatActivity implements View.OnClickListe
         switch_2.setOnClickListener(this);
         switch_1.setBackground(getDrawable(R.drawable.batterystats_tv_selected_bg));
         statisticsView = findViewById(R.id.statisticView);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        statisticsView.setHeight((int) (displayMetrics.heightPixels * 0.50));
     }
 
     @Override

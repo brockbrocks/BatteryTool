@@ -6,18 +6,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
+import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import java.io.File;
 import java.util.ArrayList;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,8 +31,12 @@ import app.nehc.batterytool.adapter.FunctionListAdapter;
 import app.nehc.batterytool.bean.FuncItem;
 import app.nehc.batterytool.service.MonitoringService;
 import app.nehc.batterytool.utils.ConfigUtil;
+import app.nehc.batterytool.utils.DBUtil;
 
 public class MainActivity extends AppCompatActivity {
+
+    //初始化全局Context
+    private static Context context;
     //电量视图
     private CirclePercentView circlePercentView;
     private BatteryManager batteryManager;
@@ -58,10 +67,18 @@ public class MainActivity extends AppCompatActivity {
     //
     private int atTop = 1;
 
+
+    public static Context getContext() {
+        return context;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //
+        context = getApplicationContext();
         //初始化设置列表(RecyclerView)
         initFunctionList();
         //根据配置文件加载服务，后续需实现检测服务是否启动功能
@@ -70,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         initRefreshCirclePercentReceiver();
         //
         initRefreshStatusPanel();
+        //初始化数据库
+        DBUtil.initDBUtil();
     }
 
 
