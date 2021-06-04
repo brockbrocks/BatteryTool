@@ -20,11 +20,12 @@ public class DBUtil {
     private static SQLiteDatabase db;
     private static Context context;
     private final static String TABLE_NAME = "battery_stats";
+    private final static String DB_NAME = "batterytool.db";
 
     static {
         context = MainActivity.getContext();
-        if (!new File("/data/data/" + context.getPackageName() + "/databases/batterytool.db").exists()) {
-            new BatteryStatsDBHelper(context, "batterytool.db", null, 1).getWritableDatabase();
+        if (!new File("/data/data/" + context.getPackageName() + "/databases/" + DB_NAME).exists()) {
+            new BatteryStatsDBHelper(context, DB_NAME, null, 1).getWritableDatabase();
         }
     }
 
@@ -34,25 +35,27 @@ public class DBUtil {
         ContentValues cv = new ContentValues();
         cv.put("time_stamp", System.currentTimeMillis());
         cv.put("capacity", content[0]);
-        db.insert("battery_stats", null, cv);
+        db.insert(TABLE_NAME, null, cv);
         db.close();
     }
 
-    public static void closeDB() {
-        if (db != null) {
-            db.close();
-        }
-    }
+//    public static void closeDB() {
+//        if (db != null) {
+//            db.close();
+//        }
+//    }
 
     public static void initDBUtil() {
     }
 
     private static SQLiteDatabase getDB() {
-        SQLiteDatabase.OpenParams openParams = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
-            openParams = new SQLiteDatabase.OpenParams.Builder().build();
-            db = SQLiteDatabase.openDatabase(new File("/data/data/app.nehc.batterytool/databases/batterytool.db"), openParams);
-        }
+//        SQLiteDatabase.OpenParams openParams = null;
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+//            openParams = new SQLiteDatabase.OpenParams.Builder().build();
+//            db = SQLiteDatabase.openDatabase(new File("/data/data/app.nehc.batterytool/databases/batterytool.db"), openParams);
+//        }
+
+        db = new BatteryStatsDBHelper(context, DB_NAME, null, 1).getWritableDatabase();
         return db;
     }
 
@@ -71,33 +74,33 @@ public class DBUtil {
         return result;
     }
 
-    public static void organizeData() {
-        db = getDB();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, "time_stamp desc");
-        cursor.moveToNext();
-        Long latestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
-        db.delete(TABLE_NAME, "time_stamp <= ? ", new String[]{String.valueOf(latestTimeStamp - 7200000)});
-        cursor.close();
-        db.close();
-    }
+//    public static void organizeData() {
+//        db = getDB();
+//        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, "time_stamp desc");
+//        cursor.moveToNext();
+//        Long latestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
+//        db.delete(TABLE_NAME, "time_stamp <= ? ", new String[]{String.valueOf(latestTimeStamp - 7200000)});
+//        cursor.close();
+//        db.close();
+//    }
 
-    public static Long getTopStats() {
-        db = getDB();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null, "1");
-        cursor.moveToNext();
-        Long earliestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
-        cursor.close();
-        db.close();
-        return earliestTimeStamp;
-    }
+//    public static Long getTopStats() {
+//        db = getDB();
+//        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null, "1");
+//        cursor.moveToNext();
+//        Long earliestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
+//        cursor.close();
+//        db.close();
+//        return earliestTimeStamp;
+//    }
 
-    public static Long getBottomStats() {
-        db = getDB();
-        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, "time_stamp desc");
-        cursor.moveToNext();
-        Long latestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
-        cursor.close();
-        db.close();
-        return latestTimeStamp;
-    }
+//    public static Long getBottomStats() {
+//        db = getDB();
+//        Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, "time_stamp desc");
+//        cursor.moveToNext();
+//        Long latestTimeStamp = cursor.getLong(cursor.getColumnIndex("time_stamp"));
+//        cursor.close();
+//        db.close();
+//        return latestTimeStamp;
+//    }
 }

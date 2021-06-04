@@ -9,16 +9,11 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +23,6 @@ import app.nehc.batterytool.bean.BatteryStatsBean;
 import app.nehc.batterytool.utils.DBUtil;
 
 public class StatisticsView extends View {
-    private Context context;
     //
     private int width;
     private int height;
@@ -42,7 +36,6 @@ public class StatisticsView extends View {
 
     public StatisticsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.StatisticsView);
         fontSize = typedArray.getDimension(R.styleable.StatisticsView_fontSize, 0);
         statsDataList.addAll(DBUtil.parseToStatsDataList());
@@ -114,16 +107,16 @@ public class StatisticsView extends View {
         canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
 
         //test
-        Paint paint5 = new Paint();
-        paint5.setAntiAlias(true);
-        paint5.setARGB(255, 28, 113, 227);
-
-        float cy = 0;
-        for (int i = 0; i <= 100; i++) {
-            cy = boundHeight / 100.0f * i + fontSize;
-            canvas.drawCircle(fontSize * 2, cy, 2, paint5);
-            canvas.drawLine(fontSize * 2, cy, fontSize * 2 + 200, cy, paint5);
-        }
+//        Paint paint5 = new Paint();
+//        paint5.setAntiAlias(true);
+//        paint5.setARGB(255, 28, 113, 227);
+//
+//        float cy = 0;
+//        for (int i = 0; i <= 100; i++) {
+//            cy = boundHeight / 100.0f * i + fontSize;
+//            canvas.drawCircle(fontSize * 2, cy, 2, paint5);
+//            canvas.drawLine(fontSize * 2, cy, fontSize * 2 + 200, cy, paint5);
+//        }
 
     }
 

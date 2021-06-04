@@ -42,6 +42,7 @@
         android:orientation="horizontal">
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/switch_tv_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,6 +55,7 @@
             android:text="视图1" />
 
         <TextView
+            android:visibility="gone"
             android:id="@+id/switch_tv_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -6,23 +6,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             if (atTop == 1) {
                 registerReceiver(refreshStatusReceiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(400);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -67,11 +61,9 @@ public class MainActivity extends AppCompatActivity {
     //
     private int atTop = 1;
 
-
     public static Context getContext() {
         return context;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,8 +81,9 @@ public class MainActivity extends AppCompatActivity {
         initRefreshStatusPanel();
         //初始化数据库
         DBUtil.initDBUtil();
+        //test
+        findViewById(R.id.test_btn).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
     }
-
 
     private void initRefreshStatusPanel() {
         //刷新状态面板广播接收器
@@ -200,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 refreshStatusTimer.cancel();
                 finish();
-//                Toast.makeText(getApplicationContext(), "超时，退出程序", Toast.LENGTH_SHORT).show();
             }
         }, 1000 * 60 * 3);
     }

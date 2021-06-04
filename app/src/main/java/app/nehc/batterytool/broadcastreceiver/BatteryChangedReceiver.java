@@ -12,23 +12,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import app.nehc.batterytool.BatteryStatsDBHelper;
-import app.nehc.batterytool.MainActivity;
 import app.nehc.batterytool.R;
-import app.nehc.batterytool.bean.BatteryStatsBean;
-import app.nehc.batterytool.utils.DBUtil;
 
 public class BatteryChangedReceiver extends BroadcastReceiver {
 
@@ -66,12 +56,8 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
                         editor.apply();
                     }
                     //insertData
-//                    DBUtil.insertData(new String[]{String.valueOf(cBattery)});
                     RemoteDBUtil.insertData(new String[]{String.valueOf(cBattery)});
                     //organizeData
-//                    if ((DBUtil.getBottomStats() - DBUtil.getTopStats()) > 43200000) {
-//                        DBUtil.organizeData();
-//                    }
                     if ((RemoteDBUtil.getBottomStats() - RemoteDBUtil.getTopStats()) > 43200000) {
                         RemoteDBUtil.organizeData();
                     }
@@ -97,11 +83,12 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
         private static SQLiteDatabase db;
         private static Context context;
         private final static String TABLE_NAME = "battery_stats";
+        private final static String DB_NAME = "batterytool.db";
 
         static {
             context = BatteryChangedReceiver.context.getApplicationContext();
-            if (!new File("/data/data/" + context.getPackageName() + "/databases/batterytool.db").exists()) {
-                new BatteryStatsDBHelper(context, "batterytool.db", null, 1).getWritableDatabase();
+            if (!new File("/data/data/" + context.getPackageName() + "/databases/" + DB_NAME).exists()) {
+                new BatteryStatsDBHelper(context, DB_NAME, null, 1).getWritableDatabase();
             }
         }
 
@@ -111,42 +98,43 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
             ContentValues cv = new ContentValues();
             cv.put("time_stamp", System.currentTimeMillis());
             cv.put("capacity", content[0]);
-            db.insert("battery_stats", null, cv);
+            db.insert(TABLE_NAME, null, cv);
             db.close();
         }
 
-        public static void closeDB() {
-            if (db != null) {
-                db.close();
-            }
-        }
+//        public static void closeDB() {
+//            if (db != null) {
+//                db.close();
+//            }
+//        }
 
-        public static void initDBUtil() {
-        }
+//        public static void initDBUtil() {
+//        }
 
         private static SQLiteDatabase getDB() {
-            SQLiteDatabase.OpenParams openParams = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
-                openParams = new SQLiteDatabase.OpenParams.Builder().build();
-                db = SQLiteDatabase.openDatabase(new File("/data/data/app.nehc.batterytool/databases/batterytool.db"), openParams);
-            }
+//            SQLiteDatabase.OpenParams openParams = null;
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
+//                openParams = new SQLiteDatabase.OpenParams.Builder().build();
+//                db = SQLiteDatabase.openDatabase(new File("/data/data/app.nehc.batterytool/databases/batterytool.db"), openParams);
+//            }
+            db = new BatteryStatsDBHelper(context, DB_NAME, null, 1).getWritableDatabase();
             return db;
         }
 
-        public static List<BatteryStatsBean> parseToStatsDataList() {
-            List<BatteryStatsBean> result = new ArrayList<>();
-            db = getDB();
-            Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
-            while (cursor.moveToNext()) {
-                BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
-                batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
-                batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
-                result.add(batteryStatsBean);
-            }
-            cursor.close();
-            db.close();
-            return result;
-        }
+//        public static List<BatteryStatsBean> parseToStatsDataList() {
+//            List<BatteryStatsBean> result = new ArrayList<>();
+//            db = getDB();
+//            Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+//            while (cursor.moveToNext()) {
+//                BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
+//                batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
+//                batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
+//                result.add(batteryStatsBean);
+//            }
+//            cursor.close();
+//            db.close();
+//            return result;
+//        }
 
         public static void organizeData() {
             db = getDB();
