@@ -9,6 +9,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,6 +34,7 @@ public class StatisticsView extends View {
     private int showViewType;
     public static final int TYPE_01 = 0;
     public static final int TYPE_02 = 1;
+    private float boundHeight;
 
     public StatisticsView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -60,7 +62,6 @@ public class StatisticsView extends View {
         //设置宽高
         width = getWidth();
         height = getHeight();
-        //
         //确定边界
         Paint paint0 = new Paint();
         paint0.setARGB(0, 0, 0, 0);
@@ -72,57 +73,57 @@ public class StatisticsView extends View {
             case TYPE_01:
                 drawTYPE_01(canvas);
                 break;
-            case TYPE_02:
-                drawTYPE_02(canvas);
-                break;
+//            case TYPE_02:
+//                drawTYPE_02(canvas);
+//                break;
         }
     }
 
-    private void drawTYPE_02(Canvas canvas) {
-        //真正作图范围
-        float boundHeight = height - fontSize - 5 - fontSize * 2;
-        //虚线画笔
-        Paint paint1 = new Paint();
-        paint1.setAntiAlias(true);
-        paint1.setStrokeWidth(1);
-        paint1.setARGB(25, 0, 0, 0);
-        //文字画笔
-        Paint paint2 = new Paint();
-        paint2.setAntiAlias(true);
-        paint2.setTextSize(fontSize);
-        paint2.setARGB(120, 0, 0, 0);
-        //画坐标系
-        for (int i = 0; i < 10; i += 2) {
-            float textY = boundHeight / 10.0f * i + fontSize * 4 / 3;
-            canvas.drawText((10 - i) + "0", 0, textY, paint2);
-            float lineY = boundHeight / 10.0f * i + fontSize;
-            canvas.drawLine(fontSize * 2, lineY, width, lineY, paint1);
-        }
-        //坐标底线
-        Paint paint4 = new Paint();
-        paint4.setAntiAlias(true);
-        paint4.setARGB(200, 141, 185, 244);
-        float lineWidth = 2;
-        paint4.setStrokeWidth(lineWidth);
-        canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
-
-        //test
-//        Paint paint5 = new Paint();
-//        paint5.setAntiAlias(true);
-//        paint5.setARGB(255, 28, 113, 227);
-//
-//        float cy = 0;
-//        for (int i = 0; i <= 100; i++) {
-//            cy = boundHeight / 100.0f * i + fontSize;
-//            canvas.drawCircle(fontSize * 2, cy, 2, paint5);
-//            canvas.drawLine(fontSize * 2, cy, fontSize * 2 + 200, cy, paint5);
+//    private void drawTYPE_02(Canvas canvas) {
+//        //真正作图范围
+//        float boundHeight = height - fontSize - 5 - fontSize * 2;
+//        //虚线画笔
+//        Paint paint1 = new Paint();
+//        paint1.setAntiAlias(true);
+//        paint1.setStrokeWidth(1);
+//        paint1.setARGB(25, 0, 0, 0);
+//        //文字画笔
+//        Paint paint2 = new Paint();
+//        paint2.setAntiAlias(true);
+//        paint2.setTextSize(fontSize);
+//        paint2.setARGB(120, 0, 0, 0);
+//        //画坐标系
+//        for (int i = 0; i < 10; i += 2) {
+//            float textY = boundHeight / 10.0f * i + fontSize * 4 / 3;
+//            canvas.drawText((10 - i) + "0", 0, textY, paint2);
+//            float lineY = boundHeight / 10.0f * i + fontSize;
+//            canvas.drawLine(fontSize * 2, lineY, width, lineY, paint1);
 //        }
-
-    }
+//        //坐标底线
+//        Paint paint4 = new Paint();
+//        paint4.setAntiAlias(true);
+//        paint4.setARGB(200, 141, 185, 244);
+//        float lineWidth = 2;
+//        paint4.setStrokeWidth(lineWidth);
+//        canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
+//
+//        //test
+////        Paint paint5 = new Paint();
+////        paint5.setAntiAlias(true);
+////        paint5.setARGB(255, 28, 113, 227);
+////
+////        float cy = 0;
+////        for (int i = 0; i <= 100; i++) {
+////            cy = boundHeight / 100.0f * i + fontSize;
+////            canvas.drawCircle(fontSize * 2, cy, 2, paint5);
+////            canvas.drawLine(fontSize * 2, cy, fontSize * 2 + 200, cy, paint5);
+////        }
+//
+//    }
 
     private void drawTYPE_01(Canvas canvas) {
         //真正作图范围
-        float boundHeight = height - fontSize - 5 - fontSize * 2;
+        boundHeight = height - fontSize - 5 - fontSize * 2;
         //虚线画笔
         Paint paint1 = new Paint();
         paint1.setAntiAlias(true);
@@ -207,6 +208,86 @@ public class StatisticsView extends View {
             canvas.drawLine(timeStrX, height - lineWidth / 2 - fontSize * 2, timeStrX, height - lineWidth / 2 - fontSize * 2 - 10, paint4);
         }
         canvas.drawText("...", width - fontSize / 3, height - fontSize / 3 - lineWidth / 2, paint5);
+
+        //充电阴影
+        //阴影画笔
+        Paint paint8 = new Paint();
+        paint8.setAntiAlias(true);
+        paint8.setStrokeJoin(Paint.Join.ROUND);
+        //上边缘
+        Paint paint9 = new Paint();
+        paint9.setAntiAlias(true);
+        paint9.setARGB(255, 41, 187, 82);
+        paint9.setStyle(Paint.Style.STROKE);
+        paint9.setStrokeJoin(Paint.Join.ROUND);
+        paint9.setStrokeWidth(8);
+
+        //渐变
+        int[] colorList2 = new int[]{0x852CFF00, 0x102CFF00};
+        LinearGradient linearGradient2 = new LinearGradient(0, 0, 0, height, colorList2, null, Shader.TileMode.CLAMP);
+        paint8.setShader(linearGradient2);
+        List<BatteryStatsBean> list = new ArrayList<>();
+        for (BatteryStatsBean bean : statsDataList) {
+            if (bean.isCharging()) {
+                list.add(bean);
+                continue;
+            }
+            if (!bean.isCharging() && list.size() > 0) {
+                list.add(bean);
+                gradientPathByList(list, canvas, paint8);
+                boldLinePathByList(list, canvas, paint9);
+                list.clear();
+                continue;
+            }
+        }
+    }
+
+    private void boldLinePathByList(List<BatteryStatsBean> list, Canvas canvas, Paint paint) {
+        if (list.size() > 0) {
+            Path path = new Path();
+            BatteryStatsBean start = list.get(0);
+            int startCapacity = start.getCapacity();
+            long startTimeStamp = start.getTimeStamp();
+            float startX = (width - fontSize * 2) * (startTimeStamp - statsDataList.get(0).getTimeStamp()) / 43200000.0f + fontSize * 2;
+            float startY = boundHeight / 100.0f * (100 - startCapacity) + fontSize;
+            path.setLastPoint(startX, startY);
+            float tX = 0;
+            float tY = 0;
+            for (BatteryStatsBean bean : list) {
+                tX = (width - fontSize * 2) * (bean.getTimeStamp() - statsDataList.get(0).getTimeStamp()) / 43200000.0f + fontSize * 2;
+                tY = boundHeight / 100.0f * (100 - bean.getCapacity()) + fontSize;
+                path.lineTo(tX, tY);
+            }
+            canvas.drawPath(path, paint);
+            Paint tmp = new Paint();
+            tmp.setAntiAlias(true);
+            tmp.setARGB(255, 41, 187, 82);
+            canvas.drawCircle(startX, startY, 4, tmp);
+            canvas.drawCircle(tX, tY, 4, tmp);
+        }
+    }
+
+    private void gradientPathByList(List<BatteryStatsBean> list, Canvas canvas, Paint paint) {
+        if (list.size() > 0) {
+            Path path = new Path();
+            BatteryStatsBean start = list.get(0);
+            int startCapacity = start.getCapacity();
+            long startTimeStamp = start.getTimeStamp();
+            float startX = (width - fontSize * 2) * (startTimeStamp - statsDataList.get(0).getTimeStamp()) / 43200000.0f + fontSize * 2;
+            float startY = boundHeight / 100.0f * (100 - startCapacity) + fontSize;
+            path.setLastPoint(startX, startY);
+
+            float tX = 0;
+            float tY = 0;
+            for (BatteryStatsBean bean : list) {
+                tX = (width - fontSize * 2) * (bean.getTimeStamp() - statsDataList.get(0).getTimeStamp()) / 43200000.0f + fontSize * 2;
+                tY = boundHeight / 100.0f * (100 - bean.getCapacity()) + fontSize;
+                path.lineTo(tX, tY);
+            }
+            path.lineTo(tX, height - fontSize * 2);
+            path.lineTo(startX, height - fontSize * 2);
+            canvas.drawPath(path, paint);
+        }
     }
 
 }

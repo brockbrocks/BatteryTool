@@ -30,11 +30,12 @@ public class DBUtil {
     }
 
 
-    public static void insertData(String[] content) {
+    public static void insertData(BatteryStatsBean bean) {
         db = getDB();
         ContentValues cv = new ContentValues();
         cv.put("time_stamp", System.currentTimeMillis());
-        cv.put("capacity", content[0]);
+        cv.put("capacity", bean.getCapacity());
+        cv.put("isCharging", bean.isCharging());
         db.insert(TABLE_NAME, null, cv);
         db.close();
     }
@@ -67,6 +68,11 @@ public class DBUtil {
             BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
             batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
             batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
+            if (cursor.getInt(cursor.getColumnIndex("isCharging")) == 0){
+                batteryStatsBean.setCharging(false);
+            }else {
+                batteryStatsBean.setCharging(true);
+            }
             result.add(batteryStatsBean);
         }
         cursor.close();

@@ -13,7 +13,7 @@ public class BatteryStatsDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table battery_stats(time_stamp bigint, capacity int)");
+        db.execSQL("create table battery_stats(time_stamp BIGINT, capacity INT, isCharging BOOLEAN)");
     }
 
     @Override

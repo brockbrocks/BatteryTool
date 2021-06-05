@@ -14,10 +14,10 @@
         <activity android:name=".TestActivity" />
         <activity android:name=".BatteryStats" />
 
-        <receiver
-            android:name=".broadcastreceiver.BatteryChangedReceiver"
-            android:enabled="true"
-            android:exported="false" />
+<!--        <receiver-->
+<!--            android:name=".broadcastreceiver.BatteryChangedReceiver"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false" />-->
 
         <service
             android:name=".service.MonitoringService"

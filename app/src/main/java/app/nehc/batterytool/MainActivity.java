@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.os.Bundle;
 
-import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import app.nehc.batterytool.adapter.FunctionListAdapter;
+import app.nehc.batterytool.bean.BatteryStatsBean;
 import app.nehc.batterytool.bean.FuncItem;
 import app.nehc.batterytool.service.MonitoringService;
 import app.nehc.batterytool.utils.ConfigUtil;
@@ -71,6 +71,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //
         context = getApplicationContext();
+        //初始化第一条数据，及数据库
+        new Thread(() -> {
+            if (DBUtil.parseToStatsDataList().size() == 0) {
+                BroadcastReceiver receiver = new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        BatteryManager batteryManager = (BatteryManager) getSystemService(BATTERY_SERVICE);
+                        boolean isCharging = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1) != 0;
+                        BatteryStatsBean bean = new BatteryStatsBean();
+                        bean.setCapacity(batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY));
+                        bean.setCharging(isCharging);
+                        DBUtil.insertData(bean);
+                    }
+                };
+                registerReceiver(receiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                try {
+                    Thread.sleep(400);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                unregisterReceiver(receiver);
+            }
+        }).start();
         //初始化设置列表(RecyclerView)
         initFunctionList();
         //根据配置文件加载服务，后续需实现检测服务是否启动功能
@@ -79,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
         initRefreshCirclePercentReceiver();
         //
         initRefreshStatusPanel();
-        //初始化数据库
-        DBUtil.initDBUtil();
-        //test
-        findViewById(R.id.test_btn).setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TestActivity.class)));
     }
 
     private void initRefreshStatusPanel() {
@@ -109,9 +128,9 @@ public class MainActivity extends AppCompatActivity {
                     //电池电压
                     batteryVoltage.setText("电压：\n" + voltage / 1000.0f + " V");
                     //电池电流
-                    batteryCurrent.setText("电流：\n" + current / 1000.0f + " mA");
+                    batteryCurrent.setText("电流：\n" + String.format("%.1f", current / 1000.0f) + " mA");
                     //电池剩余
-                    batteryRemain.setText("当前容量：\n" + remain / 1000.0f + " mAh");
+                    batteryRemain.setText("当前容量：\n" + String.format("%.1f", remain / 1000.0f) + " mAh");
                 }
             };
         }
@@ -131,26 +150,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initServiceByConfigFile() {
-        ConfigUtil.setPackageName(getPackageName());
-        for (FuncItem item : ConfigUtil.getFuncItemList()) {
-            if (item.isEnable()) {
-                switch (item.getFuncId()) {
-                    case 10000:
-                        //充电80%提醒功能
-                        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-                        boolean isRunning = false;
-                        for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
-                            if (runningService.service.getClassName().equals(getPackageName() + ".service.MonitoringService")) {
-                                isRunning = true;
-                                break;
-                            }
-                        }
-                        if (!isRunning) {
-                            startService(new Intent(this, MonitoringService.class));
-                        }
-                        break;
-                }
+        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        boolean isRunning = false;
+        for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
+            if (runningService.service.getClassName().equals(getPackageName() + ".service.MonitoringService")) {
+                isRunning = true;
+                break;
             }
+        }
+        if (!isRunning) {
+            startService(new Intent(this, MonitoringService.class));
         }
     }
 
@@ -195,5 +204,11 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }, 1000 * 60 * 3);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(refreshCirclePercentReceiver);
     }
 }

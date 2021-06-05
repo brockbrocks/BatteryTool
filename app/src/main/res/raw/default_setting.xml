@@ -6,7 +6,7 @@
         <isEnable>0</isEnable>
     </setting-item>
     <setting-item id="10001">
-        <name>耗电详情</name>
+        <name>耗电曲线</name>
         <isSwitch>0</isSwitch>
         <isEnable>0</isEnable>
     </setting-item>

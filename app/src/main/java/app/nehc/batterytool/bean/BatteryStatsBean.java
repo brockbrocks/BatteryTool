@@ -3,6 +3,15 @@ package app.nehc.batterytool.bean;
 public class BatteryStatsBean {
     private Long timeStamp;
     private int capacity;
+    private boolean isCharging;
+
+    public boolean isCharging() {
+        return isCharging;
+    }
+
+    public void setCharging(boolean charging) {
+        isCharging = charging;
+    }
 
     public Long getTimeStamp() {
         return timeStamp;

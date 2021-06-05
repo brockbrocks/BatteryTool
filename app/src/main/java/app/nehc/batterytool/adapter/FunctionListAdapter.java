@@ -82,13 +82,13 @@ public class FunctionListAdapter extends RecyclerView.Adapter<FunctionListAdapte
                 }
                 //
                 if (!holder.funcSwitch.isChecked()) {
-                    context.startService(new Intent(context, MonitoringService.class));
+//                    context.startService(new Intent(context, MonitoringService.class));
                     Toast.makeText(context, "启用充电提醒", Toast.LENGTH_SHORT).show();
                     if (!powerManager.isIgnoringBatteryOptimizations(context.getPackageName())) {
                         Toast.makeText(context, "注意：未忽略电池优化将会影响此功能", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    context.stopService(new Intent(context, MonitoringService.class));
+//                    context.stopService(new Intent(context, MonitoringService.class));
                 }
                 break;
             case 10001:
