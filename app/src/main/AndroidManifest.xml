@@ -11,13 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.BatteryTool">
-        <activity android:name=".TestActivity" />
         <activity android:name=".BatteryStats" />
-
-<!--        <receiver-->
-<!--            android:name=".broadcastreceiver.BatteryChangedReceiver"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="false" />-->
 
         <service
             android:name=".service.MonitoringService"

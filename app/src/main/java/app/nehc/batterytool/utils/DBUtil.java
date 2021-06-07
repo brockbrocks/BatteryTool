@@ -4,9 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.util.Log;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +65,9 @@ public class DBUtil {
             BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
             batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
             batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
-            if (cursor.getInt(cursor.getColumnIndex("isCharging")) == 0){
+            if (cursor.getInt(cursor.getColumnIndex("isCharging")) == 0) {
                 batteryStatsBean.setCharging(false);
-            }else {
+            } else {
                 batteryStatsBean.setCharging(true);
             }
             result.add(batteryStatsBean);
@@ -108,5 +105,18 @@ public class DBUtil {
 //        cursor.close();
 //        db.close();
 //        return latestTimeStamp;
+//    }
+
+//    public static int getLastCapacity() {
+//        List<BatteryStatsBean> list = parseToStatsDataList();
+//        int lastCapacity = list.get(list.size() - 1).getCapacity();
+//        for (int i = list.size() - 1; 0 < i; i--) {
+//            if (!list.get(i).isCharging()) {
+//                lastCapacity = list.get(i).getCapacity();
+//            } else {
+//                break;
+//            }
+//        }
+//        return lastCapacity;
 //    }
 }

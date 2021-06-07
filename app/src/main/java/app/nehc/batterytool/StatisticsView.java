@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Shader;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -69,14 +68,64 @@ public class StatisticsView extends View {
         rect.set(0, 0, width, height);
         canvas.drawRect(rect, paint0);
         //按所要展示的视图分类
-        switch (showViewType) {
-            case TYPE_01:
-                drawTYPE_01(canvas);
-                break;
+        if (statsDataList.size()>0){
+            switch (showViewType) {
+                case TYPE_01:
+                    drawTYPE_01(canvas);
+                    break;
 //            case TYPE_02:
 //                drawTYPE_02(canvas);
 //                break;
+            }
+        }else {
+            //空页
+            drawTYPE_03(canvas);
         }
+
+    }
+
+    private void drawTYPE_03(Canvas canvas){
+        //确认作图范围
+        boundHeight = height - fontSize - 5 - fontSize * 2;
+        //----------------------------------坐标系部分开始--------------------------------------------
+        //虚线画笔
+        Paint paint1 = new Paint();
+        paint1.setAntiAlias(true);
+        paint1.setStrokeWidth(1);
+        paint1.setARGB(25, 0, 0, 0);
+        //文字画笔
+        Paint paint2 = new Paint();
+        paint2.setAntiAlias(true);
+        paint2.setTextSize(fontSize);
+        paint2.setARGB(120, 0, 0, 0);
+        //画坐标系
+        for (int i = 0; i < 10; i += 2) {
+            float textY = boundHeight / 10.0f * i + fontSize * 4 / 3;
+            canvas.drawText((10 - i) + "0", 0, textY, paint2);
+            float lineY = boundHeight / 10.0f * i + fontSize;
+            canvas.drawLine(fontSize * 2, lineY, width, lineY, paint1);
+        }
+        //坐标底线
+        Paint paint4 = new Paint();
+        paint4.setAntiAlias(true);
+        paint4.setARGB(200, 141, 185, 244);
+        float lineWidth = 2;
+        paint4.setStrokeWidth(lineWidth);
+        canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
+        //底部时间画笔
+        Paint paint5 = new Paint();
+        paint5.setAntiAlias(true);
+        paint5.setARGB(120, 0, 0, 0);
+        paint5.setTextSize(fontSize);
+        paint5.setTextAlign(Paint.Align.CENTER);
+        for (int i = 0; i < 6; i++) {
+            String timeStr = new SimpleDateFormat("HH:mm").format(new Date(System.currentTimeMillis() + i * 7200000));
+            float timeStrX = (width - fontSize * 2) / 6.0f * i + fontSize * 2;
+            canvas.drawText(timeStr, timeStrX, height - 4, paint5);
+            canvas.drawLine(timeStrX, height - lineWidth / 2 - fontSize * 2, timeStrX, height - lineWidth / 2 - fontSize * 2 - 10, paint4);
+        }
+        canvas.drawText("...", width - fontSize / 3, height - fontSize / 3 - lineWidth / 2, paint5);
+        //-------------------------------------坐标部分结束-------------------------------------------
     }
 
 //    private void drawTYPE_02(Canvas canvas) {
@@ -122,8 +171,9 @@ public class StatisticsView extends View {
 //    }
 
     private void drawTYPE_01(Canvas canvas) {
-        //真正作图范围
+        //确认作图范围
         boundHeight = height - fontSize - 5 - fontSize * 2;
+        //----------------------------------坐标系部分开始--------------------------------------------
         //虚线画笔
         Paint paint1 = new Paint();
         paint1.setAntiAlias(true);
@@ -141,7 +191,29 @@ public class StatisticsView extends View {
             float lineY = boundHeight / 10.0f * i + fontSize;
             canvas.drawLine(fontSize * 2, lineY, width, lineY, paint1);
         }
-        //----------------------------------------------------------
+        //坐标底线
+        Paint paint4 = new Paint();
+        paint4.setAntiAlias(true);
+        paint4.setARGB(200, 141, 185, 244);
+        float lineWidth = 2;
+        paint4.setStrokeWidth(lineWidth);
+        canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
+        //底部时间画笔
+        Paint paint5 = new Paint();
+        paint5.setAntiAlias(true);
+        paint5.setARGB(120, 0, 0, 0);
+        paint5.setTextSize(fontSize);
+        paint5.setTextAlign(Paint.Align.CENTER);
+        for (int i = 0; i < 6; i++) {
+            String timeStr = new SimpleDateFormat("HH:mm").format(new Date(statsDataList.get(0).getTimeStamp() + i * 7200000));
+            float timeStrX = (width - fontSize * 2) / 6.0f * i + fontSize * 2;
+            canvas.drawText(timeStr, timeStrX, height - 4, paint5);
+            canvas.drawLine(timeStrX, height - lineWidth / 2 - fontSize * 2, timeStrX, height - lineWidth / 2 - fontSize * 2 - 10, paint4);
+        }
+        canvas.drawText("...", width - fontSize / 3, height - fontSize / 3 - lineWidth / 2, paint5);
+        //-------------------------------------坐标部分结束-------------------------------------------
+
+        //------------------------------------绘制数据部分开始-----------------------------------------
         //描点画笔
         Paint paint3 = new Paint();
         paint3.setAntiAlias(true);
@@ -187,28 +259,6 @@ public class StatisticsView extends View {
         canvas.drawPath(path, paint6);
         canvas.drawPath(path1, paint7);
         canvas.drawCircle(pointX, pointY, 4, paint3);//结束端的圆点
-        //坐标底线
-        Paint paint4 = new Paint();
-        paint4.setAntiAlias(true);
-        paint4.setARGB(200, 141, 185, 244);
-        float lineWidth = 2;
-        paint4.setStrokeWidth(lineWidth);
-        canvas.drawLine(fontSize * 2, height - lineWidth / 2 - fontSize * 2, width, height - lineWidth / 2 - fontSize * 2, paint4);
-
-        //底部时间画笔
-        Paint paint5 = new Paint();
-        paint5.setAntiAlias(true);
-        paint5.setARGB(120, 0, 0, 0);
-        paint5.setTextSize(fontSize);
-        paint5.setTextAlign(Paint.Align.CENTER);
-        for (int i = 0; i < 6; i++) {
-            String timeStr = new SimpleDateFormat("HH:mm").format(new Date(statsDataList.get(0).getTimeStamp() + i * 7200000));
-            float timeStrX = (width - fontSize * 2) / 6.0f * i + fontSize * 2;
-            canvas.drawText(timeStr, timeStrX, height - 4, paint5);
-            canvas.drawLine(timeStrX, height - lineWidth / 2 - fontSize * 2, timeStrX, height - lineWidth / 2 - fontSize * 2 - 10, paint4);
-        }
-        canvas.drawText("...", width - fontSize / 3, height - fontSize / 3 - lineWidth / 2, paint5);
-
         //充电阴影
         //阴影画笔
         Paint paint8 = new Paint();
@@ -221,15 +271,19 @@ public class StatisticsView extends View {
         paint9.setStyle(Paint.Style.STROKE);
         paint9.setStrokeJoin(Paint.Join.ROUND);
         paint9.setStrokeWidth(8);
-
         //渐变
         int[] colorList2 = new int[]{0x852CFF00, 0x102CFF00};
         LinearGradient linearGradient2 = new LinearGradient(0, 0, 0, height, colorList2, null, Shader.TileMode.CLAMP);
         paint8.setShader(linearGradient2);
         List<BatteryStatsBean> list = new ArrayList<>();
-        for (BatteryStatsBean bean : statsDataList) {
+        for (int i = 0; i < statsDataList.size(); i++) {
+            BatteryStatsBean bean =  statsDataList.get(i);
             if (bean.isCharging()) {
                 list.add(bean);
+                if (i == (statsDataList.size() - 1)){
+                    gradientPathByList(list, canvas, paint8);
+                    boldLinePathByList(list, canvas, paint9);
+                }
                 continue;
             }
             if (!bean.isCharging() && list.size() > 0) {
@@ -240,6 +294,7 @@ public class StatisticsView extends View {
                 continue;
             }
         }
+        //------------------------------------绘制数据部分结束-----------------------------------------
     }
 
     private void boldLinePathByList(List<BatteryStatsBean> list, Canvas canvas, Paint paint) {

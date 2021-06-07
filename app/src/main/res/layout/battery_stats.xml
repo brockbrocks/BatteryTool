@@ -18,22 +18,43 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/screenOn_time"
+        android:id="@+id/lastCapacityTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/batteryStats_title"
-        android:text="自上次拔掉电源_亮屏时间"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="8dp"
+        android:text="上次拔掉电源 剩余电量 "
+        android:textSize="13sp" />
 
     <TextView
+        android:id="@+id/screenOnTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/lastCapacityTitle"
+        android:layout_marginTop="5dp"
+        android:text="亮屏时间"
         android:textColor="@color/black"
+        android:textSize="22sp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/lastCapacity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/lastCapacityTitle"
+        android:layout_toRightOf="@id/lastCapacityTitle"
+        android:text="null" />
+
+    <TextView
         android:id="@+id/screenOn_timeDetail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/screenOn_time"
+        android:layout_alignBaseline="@id/screenOnTitle"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="20dp"
-        android:text="null"
-        android:textSize="24sp" />
+        android:text="00天 00时 00分 00秒"
+        android:textColor="@color/black"
+        android:textSize="22sp" />
 
 
     <LinearLayout
@@ -44,7 +65,6 @@
         android:orientation="horizontal">
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/switch_tv_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,10 +74,10 @@
             android:paddingTop="10dp"
             android:paddingRight="20dp"
             android:paddingBottom="10dp"
-            android:text="视图1" />
+            android:text="视图1"
+            android:visibility="gone" />
 
         <TextView
-            android:visibility="gone"
             android:id="@+id/switch_tv_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,7 +86,8 @@
             android:paddingTop="10dp"
             android:paddingRight="20dp"
             android:paddingBottom="10dp"
-            android:text="视图2" />
+            android:text="视图2"
+            android:visibility="gone" />
     </LinearLayout>
 
     <app.nehc.batterytool.StatisticsView
@@ -76,6 +97,5 @@
         android:layout_below="@id/switch_group"
         android:layout_marginTop="30dp"
         app:fontSize="10dp" />
-<!--    android:layout_marginBottom="200dp"-->
 
 </RelativeLayout>

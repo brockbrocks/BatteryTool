@@ -32,18 +32,9 @@ public class FuncItem {
     public void setEnable(boolean enable) {
         isEnable = enable;
     }
+
     private String funcName;
     private int funcId;
     private boolean isSwitchItem;
     private boolean isEnable;
-
-    @Override
-    public String toString() {
-        return "FuncItem{" +
-                "funcName='" + funcName + '\'' +
-                ", funcId=" + funcId +
-                ", isSwitchItem=" + isSwitchItem +
-                ", isEnable=" + isEnable +
-                '}';
-    }
 }

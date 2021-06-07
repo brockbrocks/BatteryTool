@@ -1,7 +1,6 @@
 package app.nehc.batterytool.service;
 
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,8 +16,12 @@ public class MonitoringService extends Service {
     private IntentFilter filter2;
     private ScreenChangedReceiver screenChangedReceiver;
 
+    public static Context context;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        //
+        context = getApplicationContext();
         //电量变化广播
         filter = new IntentFilter();
         filter.addAction(Intent.ACTION_BATTERY_CHANGED);
@@ -46,4 +49,5 @@ public class MonitoringService extends Service {
         unregisterReceiver(batteryChangedReceiver);
         unregisterReceiver(screenChangedReceiver);
     }
+
 }

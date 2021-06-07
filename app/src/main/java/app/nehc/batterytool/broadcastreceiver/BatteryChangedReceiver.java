@@ -16,24 +16,16 @@ import android.os.Build;
 import androidx.annotation.RequiresApi;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import app.nehc.batterytool.BatteryStatsDBHelper;
 import app.nehc.batterytool.R;
@@ -63,7 +55,8 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
                     if (RemoteConfigUtil.getFuncItemList().get(0).isEnable()) {
                         boolean charge_notice = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).getBoolean("charge_notice", false);
                         boolean has_notified = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).getBoolean("has_notified", false);
-                        if (cBattery == 80 && charge_notice && !has_notified) {
+                        int noticeValue = context.getSharedPreferences("charge_notice_value", Context.MODE_PRIVATE).getInt("notice_value", 80);
+                        if (cBattery == noticeValue && charge_notice && !has_notified) {
                             NotificationChannel notificationChannel = new NotificationChannel("charge notice", "充电提醒", NotificationManager.IMPORTANCE_DEFAULT);
                             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                             Notification notification = new Notification.Builder(context)
@@ -76,7 +69,7 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
                             notificationManager.notify(1, notification);
                             editor = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).edit();
                             editor.putBoolean("has_notified", true);
-                            editor.apply();
+                            editor.commit();
                         }
                     }
                     //insertData
@@ -92,15 +85,18 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
                 case Intent.ACTION_POWER_DISCONNECTED:
                     editor = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).edit();
                     editor.putBoolean("charge_notice", false);
-                    editor.apply();
+                    editor.commit();
                     //重置亮屏时间
-                    context.getSharedPreferences("screen_on_time", Context.MODE_PRIVATE).edit().putLong("on_time", 0).apply();
+                    SharedPreferences.Editor editor2 = context.getSharedPreferences("screen_on_time", Context.MODE_PRIVATE).edit();
+                    editor2.putLong("on_time", 0);
+                    editor2.putLong("screenOnTime",System.currentTimeMillis());
+                    editor2.putInt("lastCapacity", batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)).commit();
                     break;
                 case Intent.ACTION_POWER_CONNECTED:
                     editor = context.getSharedPreferences("notice_status", Context.MODE_PRIVATE).edit();
                     editor.putBoolean("charge_notice", true);
                     editor.putBoolean("has_notified", false);
-                    editor.apply();
+                    editor.commit();
                     break;
             }
         }
@@ -142,29 +138,24 @@ public class BatteryChangedReceiver extends BroadcastReceiver {
 //        }
 
         private static SQLiteDatabase getDB() {
-//            SQLiteDatabase.OpenParams openParams = null;
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O_MR1) {
-//                openParams = new SQLiteDatabase.OpenParams.Builder().build();
-//                db = SQLiteDatabase.openDatabase(new File("/data/data/app.nehc.batterytool/databases/batterytool.db"), openParams);
-//            }
             db = new BatteryStatsDBHelper(context, DB_NAME, null, 1).getWritableDatabase();
             return db;
         }
 
-        public static List<BatteryStatsBean> parseToStatsDataList() {
-            List<BatteryStatsBean> result = new ArrayList<>();
-            db = getDB();
-            Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
-            while (cursor.moveToNext()) {
-                BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
-                batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
-                batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
-                result.add(batteryStatsBean);
-            }
-            cursor.close();
-            db.close();
-            return result;
-        }
+//        public static List<BatteryStatsBean> parseToStatsDataList() {
+//            List<BatteryStatsBean> result = new ArrayList<>();
+//            db = getDB();
+//            Cursor cursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+//            while (cursor.moveToNext()) {
+//                BatteryStatsBean batteryStatsBean = new BatteryStatsBean();
+//                batteryStatsBean.setTimeStamp(cursor.getLong(cursor.getColumnIndex("time_stamp")));
+//                batteryStatsBean.setCapacity(cursor.getInt(cursor.getColumnIndex("capacity")));
+//                result.add(batteryStatsBean);
+//            }
+//            cursor.close();
+//            db.close();
+//            return result;
+//        }
 
         public static void organizeData() {
             db = getDB();

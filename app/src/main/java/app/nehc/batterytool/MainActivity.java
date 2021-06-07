@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import java.util.List;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         return context;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,13 +87,13 @@ public class MainActivity extends AppCompatActivity {
                         DBUtil.insertData(bean);
                     }
                 };
-                registerReceiver(receiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+                runOnUiThread(() -> registerReceiver(receiver, new IntentFilter(Intent.ACTION_BATTERY_CHANGED)));
                 try {
                     Thread.sleep(400);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                unregisterReceiver(receiver);
+                runOnUiThread(() -> unregisterReceiver(receiver));
             }
         }).start();
         //初始化设置列表(RecyclerView)
@@ -150,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initServiceByConfigFile() {
+        //检测监控服务是否已经启动
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         boolean isRunning = false;
         for (ActivityManager.RunningServiceInfo runningService : am.getRunningServices(Integer.MAX_VALUE)) {
@@ -161,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
         if (!isRunning) {
             startService(new Intent(this, MonitoringService.class));
         }
+        //初始化充电配置提醒文件
+        if (!new File("/data/data/" + getPackageName() + "/shared_prefs/charge_notice_value.xml").exists())
+            getSharedPreferences("charge_notice_value", MODE_PRIVATE).edit().putInt("notice_value", 80).apply();
     }
 
     private void initFunctionList() {
